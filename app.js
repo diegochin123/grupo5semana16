@@ -1,25 +1,63 @@
-new Vue({
-  //  montamos la intancia vue en el elemento HTML con el id 'app'
-  el: '#app', 
-
-  // despues definimos los datos que usará la instancia de Vue
-  data: {
-    formData: {
-      // Los datos del formulario, inicializados con valores vacíos
-      name: '',  // el nombre del usuario
-      email: '',  // el correo electrónico del usuario
-      message: ''  // el mensaje que el usuario desea enviar
+const app = Vue.createApp({
+    data() {
+        return {
+            formData: {
+                name: '',
+                email: '',
+                faculty: '',
+                city: '',
+                cycle: '',
+                message: ''
+            },
+            errores: {}
+        };
     },
-    submitted: false  // aqui nos indica si el formulario fue enviado 
-  },
+    methods: {
+        validarFormulario() {
+            this.errores = {};
 
-  // intruducimos un nuevo que se pueden invocar dentro de esta instancia
-  methods: {
-    submitForm() {
-   
-      // aquí es donde agregarías la lógica para enviar los datos, como hacer una solicitud HTTP a un servidor.
-      
-      this.submitted = true;  // Cambia el valor de 'submitted' a verdadero para indicar que el formulario ha sido enviado
+            // aqui se valida nombre
+            if (!this.formData.name) {
+                this.errores.name = "El nombre es obligatorio.";
+            }
+
+            // aqui se valida email
+            const patronEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!this.formData.email) {
+                this.errores.email = "El correo electrónico es obligatorio.";
+            } else if (!patronEmail.test(this.formData.email)) {
+                this.errores.email = "El correo electrónico no es válido.";
+            }
+
+            // aqui se valida facultad
+            if (!this.formData.faculty) {
+                this.errores.faculty = "Debe seleccionar una facultad.";
+            }
+
+            // aqui se valida ciudad
+            if (!this.formData.city) {
+                this.errores.city = "Debe seleccionar una ciudad.";
+            }
+
+            // aqui se valida ciclo
+            if (!this.formData.cycle) {
+                this.errores.cycle = "El ciclo es obligatorio.";
+            } else if (this.formData.cycle < 1 || this.formData.cycle > 10) {
+                this.errores.cycle = "El ciclo debe estar entre 1 y 10.";
+            }
+
+            // aqui se valida el mensaje
+            if (!this.formData.message) {
+                this.errores.message = "El mensaje es obligatorio.";
+            }
+
+            // se envía el formulario si no encuentra errores
+            if (Object.keys(this.errores).length === 0) {
+                alert("Formulario enviado exitosamente.");
+                console.log(this.formData); // Simular envío
+            }
+        }
     }
-  }
 });
+
+app.mount('#app');
